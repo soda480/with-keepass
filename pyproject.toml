@@ -30,6 +30,7 @@ dev = [
     "radon",
     "bandit",
     "coverage",
+    "coverage-badge",
     "twine"
 ]
 
