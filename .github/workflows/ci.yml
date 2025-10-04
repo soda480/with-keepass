@@ -44,6 +44,7 @@ jobs:
           python -m coverage xml
 
       - name: upload coverage artifacts
+        if: ${{ matrix.python-version == '3.12' }}
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
