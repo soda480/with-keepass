@@ -16,6 +16,9 @@ dependencies = [
     "pykeepass"
 ]
 
+[tool.setuptools]
+packages = ["with_keepass"]
+
 [project.scripts]
 with-keepass = "with_keepass:__main__.main"
 
@@ -30,6 +33,7 @@ dev = [
     "radon",
     "bandit",
     "coverage",
+    "coverage-badge",
     "twine"
 ]
 

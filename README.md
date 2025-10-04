@@ -1,4 +1,5 @@
 [![GitHub Workflow Status](https://github.com/soda480/with-keepass/workflows/ci/badge.svg)](https://github.com/soda480/with-keepass/actions)
+![coverage](./badges/coverage.svg)
 [![PyPI version](https://badge.fury.io/py/with-keepass.svg)](https://badge.fury.io/py/with-keepass)
 [![python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-teal)](https://www.python.org/downloads/)
 
@@ -191,6 +192,7 @@ Compute coverage report:
 ```bash
 python -m coverage run -m unittest discover tests/
 python -m coverage report -m
+coverage-badge -o badges/coverage.svg -f
 ```
 
 Run cyclomatic complexity:
