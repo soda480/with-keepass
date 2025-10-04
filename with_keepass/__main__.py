@@ -93,11 +93,11 @@ def get_env_keypass(db_path, password, path):
 
     path_split = path.split('/')
     group = keepass.find_groups_by_path(path_split, first=True)
-    entry = keepass.find_entries_by_path(path_split, first=True)
-
     if group is not None:
         return _env_from_group(group, path)
-    elif entry is not None:
+
+    entry = keepass.find_entries_by_path(path_split, first=True)
+    if entry is not None:
         return _env_from_entry(entry, path)
 
     sys_exit(f'The path {path} was neither a group or entry', exit_code=2)
