@@ -120,8 +120,7 @@ def _main():
     except (KeyboardInterrupt, EOFError):
         sys_exit('\nAborted', exit_code=130)
 
-    env_vars = get_env_keypass(
-        args.db, master_password, args.group_name, args.field_name, args.entry_path)
+    env_vars = get_env_keypass(args.db_path, master_password, args.path)
 
     if args.dry_run:
         for key, value in env_vars.items():
