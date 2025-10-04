@@ -30,14 +30,14 @@ def parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(
-        '--db',
+        '--db-path',
         dest='db_path',
-        default=DEFAULT_DB_PATH,
+        default=os.getenv('KEEPASS_DB_PATH', DEFAULT_DB_PATH),
         help='Path to KeePass .kdbx database file')
     parser.add_argument(
         '--path',
         dest='path',
-        default=DEFAULT_PATH,
+        default=os.getenv('KEEPASS_PATH', DEFAULT_PATH),
         help='path to KeePass entry or KeePass group containing the secrets to load')
     parser.add_argument(
         '--dry-run',

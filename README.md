@@ -41,7 +41,7 @@ A KeePass `Entry` contains multiple custom string fields, where each field is tr
 `with-keypass` will prompt for the master password of the KeePass database.
 
 ```bash
-usage: with-keypass [-h] [--db DB_PATH] [--path PATH] [--dry-run] ...
+usage: with-keypass [-h] [--db-path DB_PATH] [--path PATH] [--dry-run] ...
 
 Execute a command with environment variables loaded from KeePass.
 
@@ -50,7 +50,7 @@ positional arguments:
 
 options:
   -h, --help    show this help message and exit
-  --db DB_PATH  Path to KeePass .kdbx database file (default: $HOME/.kp.kdbx)
+  --db-path DB_PATH  Path to KeePass .kdbx database file (default: $HOME/.kp.kdbx)
   --path PATH   path to KeePass entry or KeePass group containing the secrets to load (default: EnvVars)
   --dry-run     Print NAME=value pairs and exit; do not exec a command (default: False)
 ```
@@ -75,7 +75,7 @@ AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 Run kubectl with secrets from a custom DB:
 ```bash
 with-keepass \
---db "$HOME/.keepass/work.kdbx" \
+--db-path "$HOME/.keepass/work.kdbx" \
 --path 'Root/Secrets/K8s' \
 -- kubectl get pods --namespace=default
 ```
