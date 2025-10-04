@@ -1,5 +1,5 @@
 [![GitHub Workflow Status](https://github.com/soda480/with-keepass/workflows/ci/badge.svg)](https://github.com/soda480/with-keepass/actions)
-![coverage](./badges/coverage.svg)
+![Coverage](https://raw.githubusercontent.com/soda480/with-keepass/main/badges/coverage.svg)
 [![PyPI version](https://badge.fury.io/py/with-keepass.svg)](https://badge.fury.io/py/with-keepass)
 [![python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-teal)](https://www.python.org/downloads/)
 
