@@ -190,7 +190,7 @@ python -m unittest discover tests/ -v
 Compute coverage report:
 ```bash
 python -m coverage run -m unittest discover tests/
-python -m coverate report -m
+python -m coverage report -m
 ```
 
 Run cyclomatic complexity:

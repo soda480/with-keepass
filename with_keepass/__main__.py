@@ -83,7 +83,7 @@ def _env_from_entry(entry, path):
         sys_exit(f'No key value attributes found in KeePass entry {path}.', exit_code=2)
     return entry.custom_properties
 
-def get_env_keypass(db_path, password, path):
+def get_env_keepass(db_path, password, path):
     """ retrieve environment variables from KeePass entries.
     """
     try:
@@ -120,7 +120,7 @@ def _main():
     except (KeyboardInterrupt, EOFError):
         sys_exit('\nAborted', exit_code=130)
 
-    env_vars = get_env_keypass(args.db_path, master_password, args.path)
+    env_vars = get_env_keepass(args.db_path, master_password, args.path)
 
     if args.dry_run:
         for key, value in env_vars.items():

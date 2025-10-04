@@ -26,6 +26,7 @@ with-keepass = "with_keepass:__main__.main"
 dev = [
     "build",
     "flake8",
+    "mock",
     "radon",
     "bandit",
     "coverage",

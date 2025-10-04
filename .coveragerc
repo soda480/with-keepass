@@ -1,0 +1,25 @@
+[run]
+branch = True
+source = .
+omit =
+    tests/*
+    venv/*
+    setup.py
+
+[report]
+# Exclude specific lines (optional)
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+    def __repr__
+    raise NotImplementedError
+
+# Fail CI if coverage drops below this
+fail_under = 80
+show_missing = True
+
+[html]
+directory = coverage_html
+
+[xml]
+output = coverage.xml
