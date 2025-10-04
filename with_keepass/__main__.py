@@ -30,19 +30,19 @@ def parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(
-        '--db',
+        '--db-path',
         dest='db_path',
-        default=DEFAULT_DB_PATH,
-        help='Path to KeePass .kdbx database file')
+        default=os.getenv('KEEPASS_DB_PATH', DEFAULT_DB_PATH),
+        help='path to KeePass .kdbx database file')
     parser.add_argument(
         '--path',
         dest='path',
-        default=DEFAULT_PATH,
+        default=os.getenv('KEEPASS_PATH', DEFAULT_PATH),
         help='path to KeePass entry or KeePass group containing the secrets to load')
     parser.add_argument(
         '--dry-run',
         action='store_true',
-        help='Print NAME=value pairs and exit; do not exec a command')
+        help='print NAME=value pairs and exit; do not exec a command')
     parser.add_argument(
         'command',
         nargs=argparse.REMAINDER,
@@ -83,7 +83,7 @@ def _env_from_entry(entry, path):
         sys_exit(f'No key value attributes found in KeePass entry {path}.', exit_code=2)
     return entry.custom_properties
 
-def get_env_keypass(db_path, password, path):
+def get_env_keepass(db_path, password, path):
     """ retrieve environment variables from KeePass entries.
     """
     try:
@@ -93,11 +93,11 @@ def get_env_keypass(db_path, password, path):
 
     path_split = path.split('/')
     group = keepass.find_groups_by_path(path_split, first=True)
-    entry = keepass.find_entries_by_path(path_split, first=True)
-
     if group is not None:
         return _env_from_group(group, path)
-    elif entry is not None:
+
+    entry = keepass.find_entries_by_path(path_split, first=True)
+    if entry is not None:
         return _env_from_entry(entry, path)
 
     sys_exit(f'The path {path} was neither a group or entry', exit_code=2)
@@ -120,7 +120,7 @@ def _main():
     except (KeyboardInterrupt, EOFError):
         sys_exit('\nAborted', exit_code=130)
 
-    env_vars = get_env_keypass(args.db_path, master_password, args.path)
+    env_vars = get_env_keepass(args.db_path, master_password, args.path)
 
     if args.dry_run:
         for key, value in env_vars.items():

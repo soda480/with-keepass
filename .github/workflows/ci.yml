@@ -33,6 +33,25 @@ jobs:
       - name: lint source code 
         run: python -m flake8 -v with_keepass/ --max-line-length 100 --ignore=E302,E305
 
+      - name: run unit tests
+        run: python -m unittest discover tests/ -v
+
+      - name: compute code coverage
+        run: |
+          python -m coverage run -m unittest discover tests/
+          python -m coverage report
+          python -m coverage html
+          python -m coverage xml
+
+      - name: upload coverage artifacts
+        if: ${{ matrix.python_version == '3.12' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage_html/
+            coverage.xml
+
       - name: run bandit scan
         run: python -m bandit -r with_keepass/ --skip B606
 

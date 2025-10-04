@@ -4,19 +4,29 @@
 
 # with-keepass
 
-`with-keepass` is a command-line utility that allows you to run any command with environment variables automatically injected from a KeePass database.
-
-This is especially useful for securely managing sensitive credentials (like API keys, AWS tokens, or database passwords) without hardcoding them into scripts, leaving them in plaintext in your shell history or exposing them in the parent shell.
+A command-line utility that allows you to run any command with environment variables automatically injected from a KeePass database. This is especially useful for securely managing sensitive credentials without hardcoding them into scripts, leaving them in plaintext in your shell history or exposing them in the parent shell.
 
 ### Why use `with-keepass`?
 
-* **Ephemeral secrets**: Environment variables exist only for the lifetime of the executed process. They are not stored in your shell, not written to history, and vanish as soon as the command finishes.
+Managing secrets is hard:
 
-* **Reduced risk**: Since the parent shell is never modified, secrets are isolated to the command being run and its child processes.
+* .env files leak — credentials often end up in repos, backups, or logs.
 
-* **KeePass integration**: This lets you use an existing, trusted password manager as the single source of truth for sensitive data.
+* Shell pollution — exporting secrets into your parent shell keeps them around after you’re done.
 
-* **Practical workflow**: Instead of hardcoding secrets or exporting them manually, you inject them only when needed — making secret use explicit and controlled.
+* Copy/paste risk — copying values from KeePass into terminals or scripts risks accidental exposure.
+
+with-keepass solves this by:
+
+* Loading secrets directly from your KeePass database.
+
+* Injecting them as environment variables only into the child process (never your shell).
+
+* Ensuring secrets are ephemeral — they disappear when the process exits.
+
+* Working with any CLI tool or script (AWS CLI, kubectl, Python apps, etc.).
+
+KeePass stays your single source of truth, while secrets stay safer.
 
 ## Installation
 
@@ -24,36 +34,90 @@ This is especially useful for securely managing sensitive credentials (like API 
 pip install with-keepass
 ```
 
-## Loading secrets from a KeePass `group` or KeePass `entry`
+## KeePass mapping model
 
-`with-keypass` is able to load environment variables from either a KeePass Group or KeePass Entry.
+Secrets can be loaded from either a KeePass group or a single entry:
 
-A KeePass `Group` contains multiple entries, where each entries:
+* Group path
 
- * Title → becomes the environment variable name.
+  * Each entry inside the group becomes an environment variable.
 
- * The custom string field named value → becomes the environment variable value.
+  * Entry Title is the variable name
 
-A KeePass `Entry` contains multiple custom string fields, where each field is treated as key value pair.
+  * Custom string field value is the variable value
 
-## Usage
+  ### Group path example
 
-`with-keypass` will prompt for the master password of the KeePass database.
+  ```
+  Group: EnvVars
+  Entry: API_KEY
+    Title: API_KEY
+    Custom String Field "value": abcd1234
+  Entry: DB_PASS
+    Title: DB_PASS
+    Custom String Field "value": supersecret
+  ```
+  Produces:
+
+  ```
+  API_KEY=abcd1234
+  DB_PASS=supersecret
+  ```
+
+* Entry path
+
+  * A single entry can hold multiple fields.
+
+  * Each custom string field becomes an environment variable.
+
+  ### Entry path example
+
+  ```
+  Entry: MyApp
+  Title: MyApp
+  Custom String Field "API_KEY": abcd1234
+  Custom String Field "DB_PASS": supersecret
+  Custom String Field "REGION": us-west-2
+  ```
+
+  Produces:
+
+  ```
+  API_KEY=abcd1234
+  DB_PASS=supersecret
+  REGION=us-west-2
+  ```
+
+## Usage & Options
 
 ```bash
-usage: with-keypass [-h] [--db DB_PATH] [--path PATH] [--dry-run] ...
+usage: with-keypass [-h] [--db-path DB_PATH] [--path PATH] [--dry-run] ...
 
 Execute a command with environment variables loaded from KeePass.
 
 positional arguments:
-  command       Command to execute; must be preceded by -- (not required with --dry-run)
+  command            Command to execute; must be preceded by -- (not required with --dry-run)
 
 options:
-  -h, --help    show this help message and exit
-  --db DB_PATH  Path to KeePass .kdbx database file (default: $HOME/.kp.kdbx)
-  --path PATH   path to KeePass entry or KeePass group containing the secrets to load (default: EnvVars)
-  --dry-run     Print NAME=value pairs and exit; do not exec a command (default: False)
+  -h, --help         show this help message and exit
+  --db-path DB_PATH  path to KeePass .kdbx database file
+                                              (default: $HOME/.keypass/.kp.kdbx)
+  --path PATH        path to KeePass entry or KeePass group containing the secrets to load
+                                              (default: EnvVars)
+  --dry-run          print NAME=value pairs and exit; do not exec a command
+                                              (default: False)
 ```
+
+** Notes **
+
+* `with-keypass` will prompt for the master password of the KeePass database.
+
+* Separate with-keepass options from the target command with --.
+
+* The --path may refer to either a group or an entry.
+
+* Able to set `--db-path` and `--path` via the following environment variables respectively `KEEPASS_DB_PATH` and `KEEPASS_PATH`
+
 
 ## Examples
 
@@ -75,7 +139,7 @@ AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 Run kubectl with secrets from a custom DB:
 ```bash
 with-keepass \
---db "$HOME/.keepass/work.kdbx" \
+--db-path "$HOME/.keepass/work.kdbx" \
 --path 'Root/Secrets/K8s' \
 -- kubectl get pods --namespace=default
 ```
@@ -87,6 +151,18 @@ with-keepass \
 | 1 | Runtime error (failed to open DB, etc.) |
 | 2 | Usage error (bad arguments, group not found, no secrets) |
 | 130 | User aborted (Ctrl-C or password prompt canceled) |
+
+## Security considerations
+
+* Secrets are injected only into the executed process, never your shell.
+
+* Secrets live in process memory while running; downstream apps may still log them.
+
+* Master password is entered at runtime — do not hard-code it.
+
+* Ensure your KeePass DB file is stored securely.
+
+* Not a replacement for full secret-management services — use appropriately.
 
 
 ## Development
@@ -114,7 +190,7 @@ python -m unittest discover tests/ -v
 Compute coverage report:
 ```bash
 python -m coverage run -m unittest discover tests/
-python -m coverate report -m
+python -m coverage report -m
 ```
 
 Run cyclomatic complexity:
