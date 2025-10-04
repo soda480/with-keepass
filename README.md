@@ -28,11 +28,11 @@ pip install with-keepass
 
 `with-keypass` is able to load environment variables from either a KeePass Group or KeePass Entry.
 
-A KeePass `Group` contains multiple entries, where each entry:
+A KeePass `Group` contains multiple entries, where each entries:
 
-Title → becomes the environment variable name.
+ * Title → becomes the environment variable name.
 
-The custom string field named value → becomes the environment variable value.
+ * The custom string field named value → becomes the environment variable value.
 
 A KeePass `Entry` contains multiple custom string fields, where each field is treated as key value pair.
 
@@ -59,8 +59,10 @@ options:
 
 Run AWS CLI with injected credentials:
 ```bash
-with-keypass --path AwsSecrets --field-name value -- \
-    aws s3 ls
+with-keypass \
+--path 'AwsSecrets' \
+--field-name value \
+-- aws s3 ls
 ```
 
 Preview environment variables:
@@ -72,8 +74,10 @@ AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 
 Run kubectl with secrets from a custom DB:
 ```bash
-with-keepass --db "$HOME/.keepass/work.kdbx" --path 'Root/Secrets/K8s' -- \
-    kubectl get pods --namespace=default
+with-keepass \
+--db "$HOME/.keepass/work.kdbx" \
+--path 'Root/Secrets/K8s' \
+-- kubectl get pods --namespace=default
 ```
 
 ## Exit Codes
