@@ -168,44 +168,7 @@ with-keepass \
 
 ## Development
 
-Create and source virtual environment:
 ```bash
-python -m venv venv && source venv/Scripts/activate
+make dev
 ```
 
-Install project in editable mode:
-```bash
-python -m pip install -e .[dev]
-```
-
-Lint the source code:
-```bash
-python -m flake8 -v with_keepass/ --max-line-length 100 --ignore=E302,E305
-```
-
-Run unit tests:
-```bash
-python -m unittest discover tests/ -v
-```
-
-Compute coverage report:
-```bash
-python -m coverage run -m unittest discover tests/
-python -m coverage report -m
-coverage-badge -o badges/coverage.svg -f
-```
-
-Run cyclomatic complexity:
-```bash
-python -m radon cc -s with_keepass/
-```
-
-Run bandit scan:
-```bash
-python -m bandit -r with_keepass/ --skip B606
-```
-
-Build the package:
-```bash
-python -m build
-```
