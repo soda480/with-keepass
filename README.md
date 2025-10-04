@@ -100,9 +100,12 @@ positional arguments:
 
 options:
   -h, --help         show this help message and exit
-  --db-path DB_PATH  Path to KeePass .kdbx database file (default: $HOME/.keypass/.kp.kdbx)
-  --path PATH        path to KeePass entry or KeePass group containing the secrets to load (default: EnvVars)
-  --dry-run          Print NAME=value pairs and exit; do not exec a command (default: False)
+  --db-path DB_PATH  path to KeePass .kdbx database file
+                                              (default: $HOME/.keypass/.kp.kdbx)
+  --path PATH        path to KeePass entry or KeePass group containing the secrets to load
+                                              (default: EnvVars)
+  --dry-run          print NAME=value pairs and exit; do not exec a command
+                                              (default: False)
 ```
 
 ** Notes **

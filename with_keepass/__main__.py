@@ -33,7 +33,7 @@ def parse_args():
         '--db-path',
         dest='db_path',
         default=os.getenv('KEEPASS_DB_PATH', DEFAULT_DB_PATH),
-        help='Path to KeePass .kdbx database file')
+        help='path to KeePass .kdbx database file')
     parser.add_argument(
         '--path',
         dest='path',
@@ -42,7 +42,7 @@ def parse_args():
     parser.add_argument(
         '--dry-run',
         action='store_true',
-        help='Print NAME=value pairs and exit; do not exec a command')
+        help='print NAME=value pairs and exit; do not exec a command')
     parser.add_argument(
         'command',
         nargs=argparse.REMAINDER,
