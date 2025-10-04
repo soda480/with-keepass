@@ -108,7 +108,7 @@ options:
                                               (default: False)
 ```
 
-** Notes **
+**Notes**
 
 * `with-keypass` will prompt for the master password of the KeePass database.
 
